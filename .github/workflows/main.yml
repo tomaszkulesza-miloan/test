@@ -27,7 +27,7 @@ jobs:
         run: tar -czf project.tar.gz ./*
 
       - name: Send files to remote
-        uses: appleboy/scp-action@0.1.7
+        uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SSH_USERNAME }}
