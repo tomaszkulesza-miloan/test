@@ -1,0 +1,49 @@
+name: Deploy b2b backend to test Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          extensions: mbstring, intl, bcmath, zip, pdo, gd #to check whats required
+          tools: composer
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --optimize-autoloader
+
+      - name: Compress application files
+        run: tar -czf project.tar.gz ./*
+
+      - name: Send files to remote
+        uses: appleboy/scp-action@v0.2.2
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          target: /var/www/html/test/ #when resource is prepared i'll update it
+          source: project.tar.gz
+
+      - name: Config on remote
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /var/www/html/test #when resource is prepared i'll update it
+            tar -xzf project.tar.gz
+            rm project.tar.gz
+            php yii migrate --interactive=0
+            echo "Finished!"
