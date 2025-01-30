@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout the repository
+      - name: Checkout the repository 1
         uses: actions/checkout@v3
 
       - name: Set up PHP
@@ -27,7 +27,7 @@ jobs:
         run: tar -czf project.tar.gz ./*
 
       - name: Send files to remote
-        uses: appleboy/scp-action@v0.2.2
+        uses: appleboy/scp-action@*
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SSH_USERNAME }}
@@ -36,7 +36,7 @@ jobs:
           source: project.tar.gz
 
       - name: Config on remote
-        uses: appleboy/ssh-action@v0.1.8
+        uses: appleboy/ssh-action@*
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SSH_USERNAME }}
