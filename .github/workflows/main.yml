@@ -20,8 +20,8 @@ jobs:
           extensions: mbstring, intl, bcmath, zip, pdo, gd #to check whats required
           tools: composer
 
-      - name: Install Composer dependencies
-        run: composer install --no-dev --optimize-autoloader
+      # - name: Install Composer dependencies
+      #   run: composer install --no-dev --optimize-autoloader
 
       - name: Compress application files
         run: tar -czf project.tar.gz ./*
